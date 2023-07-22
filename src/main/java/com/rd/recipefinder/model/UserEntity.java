@@ -3,19 +3,17 @@ package com.rd.recipefinder.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.HashSet;
-import java.util.Set;
+import lombok.ToString;
 
 @Entity
 @Data
 @EqualsAndHashCode
-@Table(name = "user", schema = "users", catalog = "postgres")
+@ToString
+@Table(name = "user", schema = "users")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
     @Basic
     @Column(name = "username")
@@ -26,10 +24,11 @@ public class UserEntity {
     @Basic
     @Column(name = "email")
     private String email;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "roles",
-            joinColumns = @JoinColumn(name = "username"),
-            inverseJoinColumns = @JoinColumn(name = "role"))
-    private Set<RolesEntity> roles = new HashSet<>();
+
+    public UserEntity(){}
+    public UserEntity(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
 }

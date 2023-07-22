@@ -7,14 +7,23 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Data
 @EqualsAndHashCode
-@Table(name = "roles", schema = "users", catalog = "postgres")
+@Table(name = "role", schema = "users")
 public class RolesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
     @Basic
     @Column(name = "username")
     private String username;
     @Basic
     @Column(name = "role")
     private String role;
+
+    public RolesEntity(){}
+
+    public RolesEntity(String username, String role) {
+        this.username = username;
+        this.role = role;
+    }
 }

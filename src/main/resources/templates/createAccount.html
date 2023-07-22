@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Please Enter Account Information</title>
+</head>
+<body>
+<h1>Please Enter Account Information</h1>
+<div th:if="${error}" th:text="${error}" class="alert alert-danger">
+</div>
+<form th:action="@{/createAccount}" method="post">
+  <div>
+    <label>
+      <input type="text" name="username" placeholder="Username"/>
+    </label>
+  </div>
+  <div>
+    <label>
+      <input type="text" name="password" placeholder="Password"/>
+    </label>
+  </div>
+  <div>
+    <label>
+      <input type="password" name="reEnterPassword" placeholder="Re-enter Password"/>
+    </label>
+  </div>
+  <div>
+    <label>
+      <input type="email" name="email" placeholder="Email"/>
+    </label>
+  </div>
+  <input type="submit" value="Create Account" />
+</form>
+</body>
+</html>
