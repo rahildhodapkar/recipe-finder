@@ -27,16 +27,18 @@ public class SecurityConfiguration  {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/createAccount/**",
-                                         "/success/**"
+                                         "/success/**",
+                                         "/resetPassword/**"
                                         ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(myUserDetailsService)
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .formLogin(form -> form
                         .loginPage("/login")
                         .permitAll()
+                        .defaultSuccessUrl("/home")
                 )
                 .build();
     }
