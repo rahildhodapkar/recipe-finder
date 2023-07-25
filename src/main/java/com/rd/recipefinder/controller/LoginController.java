@@ -4,7 +4,7 @@ import com.rd.recipefinder.model.RolesEntity;
 import com.rd.recipefinder.model.UserEntity;
 import com.rd.recipefinder.repository.RolesRepository;
 import com.rd.recipefinder.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.rd.recipefinder.service.EmailService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,24 +14,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
-/**
- * Goals:
- * Email verification system
- * Change/Forgot password
- * Google login
- */
 
 @Controller
 public class LoginController {
-    @Autowired
-    private PasswordEncoder encoder;
+    private final PasswordEncoder encoder;
     private final RolesRepository rolesRepository;
     private final UserRepository userRepository;
-
-    public LoginController(RolesRepository rolesRepository, UserRepository userRepository) {
-        this.rolesRepository = rolesRepository;
-        this.userRepository = userRepository;
-    }
+    private final EmailService emailService;
 
     @GetMapping("/login")
     public String login() {
@@ -40,7 +29,12 @@ public class LoginController {
 
     @GetMapping("/createAccount")
     public String createAccount() {
-        return "/createAccount";
+        return "createAccount";
+    }
+
+    @GetMapping("/resetPassword")
+    public String resetPassword() {
+        return "/resetPassword";
     }
 
     @PostMapping("/createAccount")
@@ -49,7 +43,8 @@ public class LoginController {
                                       @RequestParam(name = "reEnterPassword") String reEnterPassword,
                                       @RequestParam(name = "email") String email,
                                       RedirectAttributes redirectAttributes) {
-        if (userRepository.findByUsername(username).isPresent()) {
+        Optional<UserEntity> user = userRepository.findByUsername(username);
+        if (user.isPresent()) {
             redirectAttributes.addFlashAttribute("error", "\"" +username +"\"" + " is already taken. Please enter another username.");
             return "redirect:/createAccount";
         } else if (!password.equals(reEnterPassword)) {
@@ -62,18 +57,15 @@ public class LoginController {
             redirectAttributes.addFlashAttribute("error", "\"" + email + "\"" + " is already being used. Please enter another email.");
             return "redirect:/createAccount";
         } else {
-            userRepository.save(new UserEntity(username, encoder.encode(password), email));
+            userRepository.save(new UserEntity(username, encoder.encode(password), email, null, null));
             rolesRepository.save(new RolesEntity(username, "ROLE_USER"));
+            emailService.registerEmail(userRepository.findByUsernameAndEmail(username, email));
         }
         return "/success";
 
     }
 
     // resetPassword is kind of useless right now
-    @GetMapping("/resetPassword")
-    public String resetPassword() {
-        return "/resetPassword";
-    }
 
     @PostMapping("/resetPassword")
     public String handleResetPassword(@RequestParam(name = "username") String username,
@@ -104,6 +96,14 @@ public class LoginController {
 
     private static Boolean isValidEmail(String email) {
         return Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$").matcher(email).matches();
+    }
+
+    public LoginController(PasswordEncoder encoder, RolesRepository rolesRepository,
+                           UserRepository userRepository, EmailService emailService) {
+        this.encoder = encoder;
+        this.rolesRepository = rolesRepository;
+        this.userRepository = userRepository;
+        this.emailService = emailService;
     }
 
 }

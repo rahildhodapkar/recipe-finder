@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" lang="en">
+<html lang="en">
 <head>
     <title>Please Log In</title>
 </head>
@@ -22,11 +22,6 @@
     </div>
     <input type="submit" value="Log in" />
 </form>
-<form th:action="@{/createAccount}" method="get">
-    <input type="submit" value="Create user" />
-</form>
-<form th:action="@{/resetPassword}" method="get">
-    <input type="submit" value="Reset Password" />
-</form>
+<a href="/createAccount"><button>Create Account</button></a>
 </body>
 </html>
