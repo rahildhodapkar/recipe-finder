@@ -5,6 +5,7 @@ import com.rd.recipefinder.repository.UserRepository;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,23 +21,34 @@ public class EmailService {
         this.javaMailSender = javaMailSender;
     }
 
-    public void registerEmail(UserEntity user) {
-        String token = UUID.randomUUID().toString();
-        user.setVerificationToken(token);
-        user.setIsVerified(false);
-        sendVerificationEmail(user, user.getEmail(), token);
+    public void registerEmail(UserEntity user, boolean isForEmail) {
+        String token = UUID.randomUUID().toString(), subject;
+        if (isForEmail) {
+            user.setEmailVerificationToken(token);
+            user.setIsVerified(false);
+            subject = "Verification Email | Recipe Finder";
+        } else {
+            user.setPwordVerificationToken(token);
+            subject = "Password Reset | Recipe Finder";
+        }
+        sendVerificationEmail(user, user.getEmail(), token, subject, isForEmail);
     }
 
-    public Boolean isVerificationSuccessful(String token, String username) {
-        Optional<UserEntity> user = userRepository.findByUsername(username);
-        if (user.isPresent()) {
-            if (user.get().getVerificationToken().equals(token)) {
+    public Boolean isVerificationSuccessful(String token, boolean isForEmail) {
+        Optional<UserEntity> user;
+        if (isForEmail) {
+            user = userRepository.findByEmailVerificationToken(token);
+            if (user.isPresent()) {
                 user.get().setIsVerified(true);
-                user.get().setVerificationToken(null);
+                user.get().setEmailVerificationToken(null);
                 userRepository.save(user.get());
                 return true;
             }
+        } else {
+            user = userRepository.findByPwordVerificationToken(token);
+            return user.isPresent();
         }
+
         return false;
     }
 
@@ -48,11 +60,15 @@ public class EmailService {
         return false;
     }
 
-    private void sendVerificationEmail(UserEntity user, String to, String token) {
+    private void sendVerificationEmail(UserEntity user, String to, String token, String subject, boolean isForEmail) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(to);
-        mailMessage.setSubject("Verification Email | Recipe Finder");
-        mailMessage.setText(emailTextGenerator(token, user));
+        mailMessage.setSubject(subject);
+        if (isForEmail) {
+            mailMessage.setText(emailTextGenerator(token, user));
+        } else {
+            mailMessage.setText(pwordTextGenerator(token));
+        }
         mailMessage.setFrom("rdgms10@gmail.com");
         javaMailSender.send(mailMessage);
     }
@@ -65,6 +81,13 @@ public class EmailService {
                "http://localhost:8080/" + token + "\n\n" +
                "Sincerely,\n" +
                "Recipe Finder";
+    }
+
+    private String pwordTextGenerator(String token) {
+        return "Please click the attached link to reset your password: \n" +
+                "http://localhost:8080/forgotPassword" + token + "\n\n" +
+                "Sincerely,\n" +
+                "Recipe Finder";
     }
 
 }

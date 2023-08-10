@@ -28,16 +28,21 @@ public class UserEntity {
     @Column(name = "is_verified")
     private Boolean isVerified;
     @Basic
-    @Column(name = "verification_token")
-    private String verificationToken;
+    @Column(name = "email_verification_token")
+    private String emailVerificationToken;
+    @Basic
+    @Column(name = "pword_verification_token")
+    private String pwordVerificationToken;
 
     public UserEntity(){}
 
-    public UserEntity(String username, String password, String email, Boolean isVerified, String verificationToken) {
+    public UserEntity(String username, String password, String email, Boolean isVerified, String emailVerificationToken,
+                      String pwordVerificationToken) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.isVerified = isVerified;
-        this.verificationToken = verificationToken;
+        this.emailVerificationToken = emailVerificationToken;
+        this.pwordVerificationToken = pwordVerificationToken;
     }
 }

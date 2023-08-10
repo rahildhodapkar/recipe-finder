@@ -7,9 +7,8 @@ import com.rd.recipefinder.repository.UserRepository;
 import com.rd.recipefinder.service.EmailService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
@@ -37,6 +36,33 @@ public class LoginController {
         return "/resetPassword";
     }
 
+    @GetMapping("/forgotPasswordInstructions")
+    public ModelAndView forgotPasswordInstructions() {
+        ModelAndView modelAndView = new ModelAndView("/forgotPasswordInstructions");
+        modelAndView.addObject("error", null);
+        modelAndView.addObject("message", null);
+        return modelAndView;
+    }
+
+    @GetMapping("/forgotPassword/{token}")
+    public ModelAndView forgotPassword(@PathVariable String token) {
+        ModelAndView modelAndView = new ModelAndView("/forgotPassword");
+        modelAndView.addObject("token", token);
+        return modelAndView;
+    }
+
+    @PostMapping("/forgotPasswordInstructions")
+    public ModelAndView handleForgotPasswordInstructions(@RequestParam(name = "email") String email) {
+        ModelAndView modelAndView = new ModelAndView("/forgotPasswordInstructions");
+        if (userRepository.findByEmail(email).isEmpty()) {
+            modelAndView.addObject("error", "Email is not linked with a Recipe Finder account");
+        }
+        UserEntity user = userRepository.findByEmail(email).get();
+        modelAndView.addObject("message", "An email will be sent shortly to reset your password");
+        emailService.registerEmail(user, false);
+        return modelAndView;
+    }
+
     @PostMapping("/createAccount")
     public String handleCreateAccount(@RequestParam(name = "username") String username,
                                       @RequestParam(name = "password") String password,
@@ -57,15 +83,13 @@ public class LoginController {
             redirectAttributes.addFlashAttribute("error", "\"" + email + "\"" + " is already being used. Please enter another email.");
             return "redirect:/createAccount";
         } else {
-            userRepository.save(new UserEntity(username, encoder.encode(password), email, null, null));
+            userRepository.save(new UserEntity(username, encoder.encode(password), email, null, null, null));
             rolesRepository.save(new RolesEntity(username, "ROLE_USER"));
-            emailService.registerEmail(userRepository.findByUsernameAndEmail(username, email));
+            emailService.registerEmail(userRepository.findByUsernameAndEmail(username, email), true);
         }
         return "/success";
 
     }
-
-    // resetPassword is kind of useless right now
 
     @PostMapping("/resetPassword")
     public String handleResetPassword(@RequestParam(name = "username") String username,
@@ -82,6 +106,30 @@ public class LoginController {
             return "redirect:/resetPassword";
         }
         return handleResetPasswordHelper(entity.get(), newPassword, reEnterNewPassword, redirectAttributes);
+    }
+
+    @PostMapping("/forgotPassword")
+    public String handleForgotPassword(@ModelAttribute(name = "token") String token,
+                                       @RequestParam(name = "username") String username,
+                                       @RequestParam(name = "newPassword") String newPassword,
+                                       @RequestParam(name = "reEnterNewPassword") String reEnterNewPassword,
+                                       RedirectAttributes redirectAttributes){
+        Optional<UserEntity> user = userRepository.findByPwordVerificationToken(token);
+        if (user.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Invalid token.");
+            return "redirect:/login";
+        } else if (!user.get().getUsername().equals(username)) {
+            redirectAttributes.addFlashAttribute("error", "Invalid token.");
+            return "redirect:/login";
+        } else if (!newPassword.equals(reEnterNewPassword)) {
+            redirectAttributes.addFlashAttribute("error", "Passwords do not match, please try again.");
+            return "redirect:/forgotPassword" + token;
+        } else {
+            user.get().setPassword(newPassword);
+            user.get().setPwordVerificationToken(null);
+            userRepository.save(user.get());
+        }
+        return "/success";
     }
 
     private String handleResetPasswordHelper(UserEntity user, String newPassword, String reEnterNewPassword, RedirectAttributes redirectAttributes) {

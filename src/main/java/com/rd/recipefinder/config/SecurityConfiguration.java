@@ -34,7 +34,12 @@ public class SecurityConfiguration  {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/createAccount/**",
-                                         "/success/**"
+                                         "/success/**",
+                                         "/forgotPassword/**",
+                                         "/forgotPasswordInstructions/**",
+                                         "/test/**",
+                                         "/recipeSearch/**",
+                                         "/recipeResults/**"
                                         ).permitAll()
                         .anyRequest().authenticated()
                 )
