@@ -3,6 +3,8 @@
 1. [Description](#description)
 2. [Technologies Used](#technologies-used)
 3. [How to Use](#how-to-use)
+4. [Demo](#demo)
+5. [Closing](#closing)
 ## Description
 This project's goal is to utilize my love for both food and coding to further my learning of web development and using industry-standard technologies/frameworks/languages. Recipe Finder allows one to input a list of ingredients they have on hand to generate an assortment of curated recipes based on the input. Edamam's [Recipe Search and Diet](https://rapidapi.com/edamam/api/recipe-search-and-diet/) API is used to fetch the recipes. Please note that development for this project has essentially just started. Right now, this app only does the barebones requirements (log-in with password encryption and email verification, ability to input ingredients and receive recipes based on input). As my learning progresses, so too will this app's development. As it stands, here is what I want to implement:
 - Community ranking system
@@ -81,6 +83,7 @@ Ensure you have Java 11 or later and have set up the API, SMTP, and PSQL DB
 Once running, you can access the application at http://localhost:8080
 
 ## Demo
+[Link to video](https://youtu.be/-aDJEWW2Gvo)
 
 ## Closing
 Thank you for taking the time to check out my project!
