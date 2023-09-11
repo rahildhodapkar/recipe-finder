@@ -37,9 +37,7 @@ public class SecurityConfiguration  {
                                          "/success/**",
                                          "/forgotPassword/**",
                                          "/forgotPasswordInstructions/**",
-                                         "/test/**",
-                                         "/recipeSearch/**",
-                                         "/recipeResults/**"
+                                         "/test/**"
                                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -48,7 +46,7 @@ public class SecurityConfiguration  {
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/", false)
+                        .defaultSuccessUrl("/recipeSearch", true)
                         .permitAll()
                 )
                 .build();

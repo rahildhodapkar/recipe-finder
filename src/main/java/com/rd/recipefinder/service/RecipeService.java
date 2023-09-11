@@ -1,6 +1,7 @@
 package com.rd.recipefinder.service;
 
 import com.rd.recipefinder.model.Response;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -9,12 +10,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class RecipeService {
-    private static final String API_URL = "https://edamam-recipe-search.p.rapidapi.com/search?q=";
-    private static final String API_KEY = "2e47353017msh262f776d039505cp1dba8fjsnc566c82373af";
+    private static final String API_URL = "https://edamam-recipe-search.p.rapidapi.com/api/recipes/v2?type=public&q=";
+    @Value("${api.key}")
+    private static String API_KEY;
     private static final String API_HOST = "edamam-recipe-search.p.rapidapi.com";
     public List<Response.Hits.Recipe> searchRecipes(String query) {
         String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);

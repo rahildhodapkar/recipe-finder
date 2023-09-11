@@ -29,6 +29,7 @@ public class RecipeController {
         for (String field : fields) {
             query.append(field).append(" ");
         }
+        query.deleteCharAt(query.length() - 1);
         List<Response.Hits.Recipe> recipes = getRecipes(query.toString());
         ModelAndView modelAndView = new ModelAndView("redirect:/recipeResults");
         model.addAttribute("recipes", recipes);

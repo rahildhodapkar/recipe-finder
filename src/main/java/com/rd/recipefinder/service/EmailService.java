@@ -3,9 +3,9 @@ package com.rd.recipefinder.service;
 import com.rd.recipefinder.model.UserEntity;
 import com.rd.recipefinder.repository.UserRepository;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,6 +15,9 @@ import java.util.UUID;
 public class EmailService {
     private final UserRepository userRepository;
     private final JavaMailSender javaMailSender;
+
+    @Value("${email.address}")
+    private String email;
 
     public EmailService(UserRepository userRepository, JavaMailSender javaMailSender) {
         this.userRepository = userRepository;
@@ -69,7 +72,7 @@ public class EmailService {
         } else {
             mailMessage.setText(pwordTextGenerator(token));
         }
-        mailMessage.setFrom("rdgms10@gmail.com");
+        mailMessage.setFrom(email);
         javaMailSender.send(mailMessage);
     }
 

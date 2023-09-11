@@ -11,9 +11,9 @@ spring:
           issuer-uri: https://idp.example.com/issuer
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: success01
+    url: jdbc:postgresql://localhost:5432/your_database_name
+    username: your_username
+    password: your_password
     dbcp2:
       test-on-borrow: true
       validation-query: SELECT 1
@@ -28,11 +28,15 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: rdgms10@gmail.com
-    password: ihemffghmxlxjuoz
+    username: 'INSERT_USERNAME_HERE'
+    password: 'INSERT_PASSWORD_HERE'
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
+api:
+  key: 'INSERT_EDAMAM_API_KEY_HERE'
+email:
+  address: 'INSERT_EMAIL_ADDRESS_HERE'
