@@ -66,6 +66,8 @@ username corresponds to your PSQL username
 
 your_database_name corresponds to your PSQL database name
 
+In the .yml file, please insert your PSQL username, password, and database name accordingly
+
 ### To Run
 Ensure you have Java 11 or later and have set up the API, SMTP, and PSQL DB
 
