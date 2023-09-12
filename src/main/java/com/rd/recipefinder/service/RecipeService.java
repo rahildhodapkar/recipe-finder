@@ -14,12 +14,13 @@ import java.util.List;
 @Service
 public class RecipeService {
     private static final String API_URL = "https://edamam-recipe-search.p.rapidapi.com/api/recipes/v2?type=public&q=";
-    @Value("${api.key}")
-    private static String API_KEY;
+    private final String API_KEY;
     private static final String API_HOST = "edamam-recipe-search.p.rapidapi.com";
     public List<Response.Hits.Recipe> searchRecipes(String query) {
         String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
         String url = API_URL + encodedQuery;
+
+        System.out.println(API_KEY);
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getInterceptors().add((request, body, execution) -> {
@@ -40,5 +41,9 @@ public class RecipeService {
         } else {
             return Collections.emptyList();
         }
+    }
+
+    public RecipeService(@Value("${api.key}") String apiKey) {
+        this.API_KEY = apiKey;
     }
 }

@@ -15,13 +15,12 @@ import java.util.UUID;
 public class EmailService {
     private final UserRepository userRepository;
     private final JavaMailSender javaMailSender;
+    private final String email;
 
-    @Value("${email.address}")
-    private String email;
-
-    public EmailService(UserRepository userRepository, JavaMailSender javaMailSender) {
+    public EmailService(UserRepository userRepository, JavaMailSender javaMailSender, @Value("${email.address}") String email) {
         this.userRepository = userRepository;
         this.javaMailSender = javaMailSender;
+        this.email = email;
     }
 
     public void registerEmail(UserEntity user, boolean isForEmail) {

@@ -37,7 +37,7 @@ public class SecurityConfiguration  {
                                          "/success/**",
                                          "/forgotPassword/**",
                                          "/forgotPasswordInstructions/**",
-                                         "/test/**"
+                                         "/style.css"
                                         ).permitAll()
                         .anyRequest().authenticated()
                 )
