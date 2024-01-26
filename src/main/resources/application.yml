@@ -1,19 +1,14 @@
 spring:
-  profiles:
-    active: development
   security:
-    user:
-      name: user
-      password: password
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: https://idp.example.com/issuer
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/your_database_name
-    username: your_username
-    password: your_password
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_USER}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     dbcp2:
       test-on-borrow: true
       validation-query: SELECT 1
@@ -28,8 +23,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: 'INSERT_USERNAME_HERE'
-    password: 'INSERT_PASSWORD_HERE'
+    username: ${GMAIL_ADDRESS}
+    password: ${GMAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -37,6 +32,6 @@ spring:
           starttls:
             enable: true
 api:
-  key: 'INSERT_EDAMAM_API_KEY_HERE'
+  key: ${EDAMAM_API_KEY}
 email:
-  address: 'INSERT_EMAIL_ADDRESS_HERE'
+  address: ${GMAIL_ADDRESS}
