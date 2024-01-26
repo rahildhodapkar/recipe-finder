@@ -9,7 +9,7 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode
 @ToString
-@Table(name = "user")
+@Table(name = "user_info", schema = "users")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
