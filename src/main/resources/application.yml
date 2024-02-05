@@ -5,17 +5,6 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: https://idp.example.com/issuer
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ${GMAIL_ADDRESS}
-    password: ${GMAIL_PASSWORD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
   jpa:
     hibernate:
       ddl-auto: update
