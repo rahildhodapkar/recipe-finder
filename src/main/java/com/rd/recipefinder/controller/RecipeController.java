@@ -15,13 +15,7 @@ public class RecipeController {
     private final RecipeService recipeService;
 
     @GetMapping("/recipeSearch")
-    public String recipeSearch() { return "/recipeSearch"; }
-
-    @GetMapping("/recipeResults")
-    public String recipeResults(Model model, @ModelAttribute("recipes") List<Response.Hits.Recipe> recipes) {
-        model.addAttribute("recipes", recipes);
-        return "/recipeResults";
-    }
+    public String recipeSearch() { return "recipeSearch"; }
 
     @PostMapping("/recipeSearch")
     @ResponseBody

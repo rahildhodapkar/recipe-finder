@@ -9,7 +9,6 @@ $(document).ready(function() {
         });
         $('#submitBtn').prop('disabled', !isAnyFieldFilled);
 
-        // Show or hide the delete button based on the number of input fields
         if (fieldCount > 1) {
             $('.deleteFieldBtn').show();
         } else {
@@ -38,17 +37,14 @@ $(document).ready(function() {
     });
 
     $('#refreshForm').click(function() {
-        // Clear all input fields
         $('.input-container').not(':first').remove();
         $('.input-container:first .input').val('');
-        // Hide the recipes container
         $('#resultsContainer').empty().hide();
         checkInputsAndDeleteButton();
     });
 
     addDeleteButtonFunctionality();
     $('.input').change(checkInputsAndDeleteButton);
-    // Initially hide the recipes container
     $('#resultsContainer').hide();
     checkInputsAndDeleteButton();
 
