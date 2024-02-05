@@ -96,12 +96,19 @@ To set up the api, go to this [link](https://rapidapi.com/edamam/api/recipe-sear
 ### Environment Variables
 Ensure you have the following environment variables set in your run configuration:
 DEV_DB_HOST=Your PSQL DB host
+
 DEV_DB_PORT=Your PSQL DB port
+
 DEV_DB_USER=Your PSQL DB username
+
 DEV_DB_PASSWORD=Your PSQL DB password
+
 GMAIL_ADDRESS=Can make random string
+
 GMAIL_PASSWORD=Can make random string
+
 EDAMAM_API_KEY=Your Edamam API Key
+
 SPRING_PROFILES_ACTIVE=dev
 
 Ensure the only active profile is dev.
