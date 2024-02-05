@@ -2,6 +2,7 @@ package com.rd.recipefinder.controller;
 
 import com.rd.recipefinder.model.Response;
 import com.rd.recipefinder.service.RecipeService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,17 +25,19 @@ public class RecipeController {
     }
 
     @PostMapping("/recipeSearch")
-    public ModelAndView handleRecipeSearch(@RequestParam(name = "field[]") String[] fields, Model model) {
+    @ResponseBody
+    public ResponseEntity<List<Response.Hits.Recipe>> handleRecipeSearch(@RequestParam(name = "field[]") String[] fields) {
         StringBuilder query = new StringBuilder();
         for (String field : fields) {
             query.append(field).append(" ");
         }
-        query.deleteCharAt(query.length() - 1);
+        if (query.length() > 0) {
+            query.deleteCharAt(query.length() - 1);
+        }
         List<Response.Hits.Recipe> recipes = getRecipes(query.toString());
-        ModelAndView modelAndView = new ModelAndView("redirect:/recipeResults");
-        model.addAttribute("recipes", recipes);
-        return modelAndView;
+        return ResponseEntity.ok(recipes);
     }
+
 
     private List<Response.Hits.Recipe> getRecipes(String query) {
         return recipeService.searchRecipes(query);

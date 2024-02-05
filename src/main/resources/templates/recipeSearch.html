@@ -2,32 +2,29 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        form {
-            padding: 20px;
-        }
-
-        input {
-            width: 100%;
-            margin-bottom: 5px;
-        }
-    </style>
+    <title>Recipe Finder</title>
     <link rel="stylesheet" href="/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script>
-        $(document).on('click', '.add_field', function() {
-            $('<input type="text" class="input" name="field[]" value="">').insertAfter('.input:last');
-        })
-    </script>
+    <script src="recipeSearchScript.js"></script>
 </head>
 <body>
-    <form th:action="@{/recipeSearch}" method="post">
-        <label>
-            <input type="text" class="input" name="field[]" value=""/>
-        </label>
-        <input type="submit" name="submit" value="Submit"/>
+<div class="header-div">
+    <h1>Recipe Search</h1>
+    <p>Welcome to Recipe Search, the smart way to find recipes! Add any ingredients you have lying around, and we will take care of the rest!</p>
+</div>
+<div class="form-div">
+    <form id="recipeSearchForm" th:action="@{/recipeSearch}" method="post">
+        <div class="input-container">
+            <input type="text" class="input" name="field[]" value="" placeholder="Add ingredient"/>
+            <button type="button" class="deleteFieldBtn">Delete</button>
+        </div>
+        <div class="buttons-container">
+            <button type="button" id="addFieldBtn">Add Ingredient</button>
+            <button type="submit" id="submitBtn" name="submit" disabled>Submit</button>
+            <button type="button" id="refreshForm">Refresh</button>
+        </div>
     </form>
-    <button type="button" class="add_field">Add field</button>
+</div>
+<div id="resultsContainer" class="toggle-div"></div>
 </body>
 </html>
