@@ -1,18 +1,20 @@
 # Recipe Finder
+
+<img width="1190" alt="image" src="https://github.com/rahildhodapkar/recipe-finder/assets/115059842/f717c2b1-ceda-4aef-84cf-f0f235b364cf">
+
+[LINK TO WEBSITE](https://recipesearch.up.railway.app/recipeSearch)
+
 ## Table of Contents
 1. [Description](#description)
 2. [Technologies Used](#technologies-used)
 3. [How to Use](#how-to-use)
-4. [Demo](#demo)
-5. [Closing](#closing)
+4. [Run Locally](#run-locally)
+5. [Contact Information](#contact-information)
 ## Description
-This project's goal is to utilize my love for both food and coding to further my learning of web development and using industry-standard technologies/frameworks/languages. Recipe Finder allows one to input a list of ingredients they have on hand to generate an assortment of curated recipes based on the input. Edamam's [Recipe Search and Diet](https://rapidapi.com/edamam/api/recipe-search-and-diet/) API is used to fetch the recipes. Please note that development for this project has essentially just started. Right now, this app only does the barebones requirements (log-in with password encryption and email verification, ability to input ingredients and receive recipes based on input). As my learning progresses, so too will this app's development. As it stands, here is what I want to implement:
-- Community ranking system
-- Detailed modern styling, potentially using a framework like Bootstrap
-- Ability to save recent recipes
-- Blocking certain features for unverified accounts
-- Deployment to web server
-- Many other features
+Recipe Finder allows one to input a list of ingredients they have on hand to generate an assortment of curated recipes based on the input. Edamam's [Recipe Search and Diet](https://rapidapi.com/edamam/api/recipe-search-and-diet/) API is used to fetch the recipes. Here is what I want to implement in the future:
+- Login
+   - Used to have one but removed it as user information is currently useless
+- Better styling/web-design practices
 
 ## Technologies Used
 
@@ -24,14 +26,16 @@ This project leverages a variety of technologies to create a seamless and intera
    
 2. **PostgreSQL Database**:
    - Utilized as the primary database to store user data and other relevant information.
+   - Temporarily unused due to removal of login
 
 3. **Gmail SMTP**:
    - Integrated for sending email notifications and verifications to users.
    - Ensures secure and reliable email delivery.
+   - Temporarilyh unused due to removal of login
 
 ### Frontend
 
-4. **HTML/CSS**
+4. **JS/HTML/CSS**
   
 ### API Integration
 
@@ -40,56 +44,82 @@ This project leverages a variety of technologies to create a seamless and intera
    - Offers a vast collection of recipes with various dietary and nutritional filters.
 
 ## How to Use
-Before running this app, you must set up the applications.yml file.
-### API
-To set up the api, go to this [link](https://rapidapi.com/edamam/api/recipe-search-and-diet/), and sign up for a RapidAPI account (if you do not have one). A generated key will then be available for you to use. Please insert this into the .yml file where it says 'INSERT_EDAMAM_API_KEY_HERE'.
+Navigate to: recipesearch.up.railway.app/recipeSearch
+Enter ingredients into the form, press submit, and recipes will displayed that best match the list of ingredients you inputted.
 
-### SMTP
-In the .yml file, where it says 'INSERT_EMAIL_ADDRESS_HERE', insert the gmail address you want to use. 
-Then, go to this [link](https://myaccount.google.com/apppasswords) while logged into the gmail account you want to use. Enter a name of your choosing, and then copy the generated password given to you. Insert this password in the .yml file where it says 'INSERT_PASSWORD_HERE'. 
-Where it says 'INSERT_USERNAME_HERE', insert your gmail address. 
+## Run Locally
+If you would like to run this program locally, there are a few steps you will need to follow:
 
-### PostgreSQL DB
-To set up the database locally, ensure you have PostgreSQL [installed](https://www.postgresql.org/download/). 
+### Prerequisites
+1. Java 17 or later
+2. PostgreSQL
+3. Maven
 
-Create a new databse in PostgreSQL using the following command:
-```sh
-createdb <your_database_name>
+### Clone Repository
+Clone and navigate to this repository by using these following commands:
+```
+git clone https://github.com/rahildhodapkar/recipe-finder.git
+cd recipe-finder
 ```
 
-Then restore the database from the dump using the following command:
-```sh
-pg_restore -U <username> -d <your_database_name> -1 "src/database/dump-postgres-202309111836"
+### Local PSQL Database
+Because this program will eventually require user information, it requires a PSQL DB.
+
+After installing PostgreSQL, create a new local PostgreSQL database.
+
+Create two tables in the public schema with the following script:
+
+```
+create table user_info (
+	id serial primary key,
+	username text,
+	password text,
+	email text,
+	is_verified bool,
+	email_verification_token text,
+	pword_verification_token text
+);
+
+create table role_info (
+	id serial primary key,
+	username text,
+	role text
+);
 ```
 
-username corresponds to your PSQL username
+### Email SMTP
+This project will use SMTP for email verification, but currently does not do so.
 
-your_database_name corresponds to your PSQL database name
+### Edamam API Key
+To set up the api, go to this [link](https://rapidapi.com/edamam/api/recipe-search-and-diet/), and sign up for a RapidAPI account (if you do not have one). A generated key will then be available for you to use. Please keep track of this key.
 
-In the .yml file, please insert your PSQL username, password, and database name accordingly
+### Environment Variables
+Ensure you have the following environment variables set in your run configuration:
+DEV_DB_HOST=Your PSQL DB host
+DEV_DB_PORT=Your PSQL DB port
+DEV_DB_USER=Your PSQL DB username
+DEV_DB_PASSWORD=Your PSQL DB password
+GMAIL_ADDRESS=Can make random string
+GMAIL_PASSWORD=Can make random string
+EDAMAM_API_KEY=Your Edamam API Key
+SPRING_PROFILES_ACTIVE=dev
 
-### To Run
-Ensure you have Java 11 or later and have set up the API, SMTP, and PSQL DB
+Ensure the only active profile is dev.
 
-1. Clone the repository
-2. Navigate to the root of the project directory in your terminal
-3. Build the project using
-```sh
+### To run
+Use this command in the directory to build:
+```
 ./mvnw clean install
-```  
-4. Run the application using
-```sh
+```
+
+And this command to run:
+```
 ./mvnw spring-boot:run
 ```
 
-Once running, you can access the application at http://localhost:8080
+Navigate to localhost:8080.
 
-## Demo
-[Link to video](https://youtu.be/-aDJEWW2Gvo)
-
-## Closing
+## Contact Information
+Developer: Rahil Dhodapkar
+Email: rahildhodapkar@gmail.com
 Thank you for taking the time to check out my project!
-
-
-  
-
