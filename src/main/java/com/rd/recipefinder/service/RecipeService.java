@@ -19,9 +19,6 @@ public class RecipeService {
     public List<Response.Hits.Recipe> searchRecipes(String query) {
         String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
         String url = API_URL + encodedQuery;
-
-        System.out.println(API_KEY);
-
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getInterceptors().add((request, body, execution) -> {
            request.getHeaders().add("X-RapidAPI-Key", API_KEY);
